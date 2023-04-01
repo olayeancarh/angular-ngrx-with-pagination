@@ -2,13 +2,17 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { SeamhealthRoutingModule } from './seamhealth-routing.module';
-
+import { SeamhealthComponent } from './seamhealth.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    SeamhealthComponent
+  ],
   imports: [
     CommonModule,
-    SeamhealthRoutingModule
+    SeamhealthRoutingModule,
+    MatSlideToggleModule
   ]
 })
 export class SeamhealthModule { }
