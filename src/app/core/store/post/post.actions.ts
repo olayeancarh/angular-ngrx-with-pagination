@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Posts } from '../../models';
+import { PostParams, Posts } from '../../models';
 
 export enum PostActionTypes {
   LoadPosts = '[Posts] Load Posts',
@@ -9,6 +9,7 @@ export enum PostActionTypes {
 
 export class LoadPosts implements Action {
   readonly type = PostActionTypes.LoadPosts;
+  constructor(public payload: number) {}
 }
 
 export class LoadPostsSuccess implements Action {

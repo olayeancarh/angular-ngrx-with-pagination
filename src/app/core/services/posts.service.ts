@@ -1,8 +1,8 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, filter, switchMap } from 'rxjs';
 import { environment } from 'src/environments/environment.prod';
-import { PostParams, Posts } from '../models';
+import { Posts } from '../models';
 import { handleError } from '../utils/error.utils';
 
 @Injectable({
@@ -10,18 +10,25 @@ import { handleError } from '../utils/error.utils';
 })
 export class PostsService {
   baseUrl: string = environment.baseApiUrl;
+  private pagePaginationSubject = new BehaviorSubject<number>(1);
+  pagePaginationChange$ = this.pagePaginationSubject.asObservable();
+
+  posts$ = this.pagePaginationChange$.pipe(
+    filter(page => Boolean(page)),
+    switchMap((page: number) => this.http.get<Posts[]>(`${this.baseUrl}posts?_page=${page}&_limit=10`)),
+    catchError(handleError),
+  );
 
   constructor(private http: HttpClient) {}
 
   // Gets posts based on passed params
-  getPosts(params?: PostParams): Observable<Posts[]> {
-    let httpParams = new HttpParams();
-    if (params) {
-      httpParams.set('_page', params._page);
-      httpParams.set('_limit', params._limit);
-    }
+  getPosts(page: number): Observable<Posts[]> {
     return this.http
-      .get<Posts[]>(`${this.baseUrl}posts`, { params: httpParams })
+      .get<Posts[]>(`${this.baseUrl}posts?_page=${page}&_limit=10`)
       .pipe(catchError(handleError));
+  }
+
+  pagePaginationChange(page: number) {
+    this.pagePaginationSubject.next(page);
   }
 }
