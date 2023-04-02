@@ -58,7 +58,6 @@ export class PostsComponent implements OnInit, OnDestroy {
   }
 
   getPosts(arg?: any) {
-    this.dataSource.data = [];
     this.loading = true;
     let params: PostParams = {
       _limit: this.limit,

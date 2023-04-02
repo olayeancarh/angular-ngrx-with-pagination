@@ -11,7 +11,7 @@ export class PostEffects {
 
   loadPosts$: Observable<Action> = createEffect(() => this._actions$.pipe(
     ofType<postActions.LoadPosts>(postActions.PostActionTypes.LoadPosts),
-    switchMap(() => this.postService.posts$.pipe(
+    switchMap(() => this.postService.getPosts().pipe(
       map(items => new postActions.LoadPostsSuccess(items)),
       catchError(error => of(new postActions.LoadPostsFail(error)))
     ))
