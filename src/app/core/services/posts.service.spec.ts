@@ -27,7 +27,7 @@ describe('PostsService', () => {
 
   it('should get posts', () => {
     let allPost: Posts[] | undefined;
-    postService.posts$.subscribe((posts) => (allPost = posts));
+    postService.getPosts().subscribe((posts) => (allPost = posts));
 
     const request = httpMock.expectOne({
       method: 'GET',
