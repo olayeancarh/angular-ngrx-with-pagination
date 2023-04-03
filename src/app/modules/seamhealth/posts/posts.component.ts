@@ -1,15 +1,23 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Subject, takeUntil } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { Subject, delay, takeUntil, tap } from 'rxjs';
 import { Posts } from 'src/app/core/models';
-import { PostsService } from 'src/app/core/services/posts.service';
+import { LoadPosts, getPostsByPage } from 'src/app/core/store/post';
+import { AppState } from 'src/app/core/store/root-state';
 
 @Component({
   selector: 'app-posts',
   templateUrl: './posts.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostsComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort!: MatSort;
@@ -22,7 +30,7 @@ export class PostsComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['id', 'userId', 'title', 'body'];
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-  constructor(private postService: PostsService) {}
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
     this.getPosts();
@@ -41,23 +49,21 @@ export class PostsComponent implements OnInit, OnDestroy {
     return item.id || index;
   }
 
-  getPosts(): void {
+  getPosts(event?: PageEvent): void {
     this.loading = true;
-    this.postService.pagePaginationChange(this.currentPage + 1);
-    this.postService.posts$.pipe(takeUntil(this._unsubscribeAll)).subscribe({
-      next: (posts) => {
-        this.dataSource.data = posts;
+    this.currentPage = event ? event.pageIndex : this.currentPage;
+    this.store.dispatch(new LoadPosts(this.currentPage + 1));
+    this.store
+      .select(getPostsByPage(this.currentPage + 1))
+      .pipe(
+        tap((posts) => posts.length > 0 && (this.dataSource.data = posts)),
+        delay(1000),
+        takeUntil(this._unsubscribeAll)
+      )
+      .subscribe(() => {
         this.paginator.pageIndex = this.currentPage;
         this.paginator.length = 100;
         this.loading = false;
-      },
-      error: (err) => console.log(err),
-    });
-  }
-
-  pageChanged(event: PageEvent): void {
-    this.loading = true;
-    this.currentPage = event.pageIndex;
-    this.postService.pagePaginationChange(this.currentPage + 1);
+      });
   }
 }

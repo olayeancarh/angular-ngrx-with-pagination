@@ -3,6 +3,7 @@ export interface Posts {
   id: number;
   title: string;
   body: string;
+  page?: number;
 }
 
 export interface PostParams {

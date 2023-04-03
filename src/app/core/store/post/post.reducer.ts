@@ -8,7 +8,7 @@ export const postReducer = (state = initialPostState, action: PostActions): Post
     }
 
     case PostActionTypes.LoadPostsSuccess: {
-      return { ...state, posts: action.payload, isLoading: false };
+      return { ...state, posts: [...state.posts, ...action.payload], isLoading: false };
     }
 
     case PostActionTypes.LoadPostsFail: {
