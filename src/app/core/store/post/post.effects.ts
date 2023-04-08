@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
-import { Observable, switchMap, map, catchError, of, tap, filter } from 'rxjs';
+import { Observable, switchMap, map, catchError, of, filter } from 'rxjs';
 import * as postActions from './post.actions';
 import { PostsService } from '../../services/posts.service';
 import { AppState } from '../root-state';
-import { getPosts, getPostsByPage } from './post.selector';
+import { getPostsByPage } from './post.selector';
 
 @Injectable()
 export class PostEffects {

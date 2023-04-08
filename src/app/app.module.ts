@@ -18,9 +18,6 @@ import { RootStoreModule } from './core/store/root-store.module';
 
     // Core Module
     CoreModule,
-
-    // Store
-    RootStoreModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

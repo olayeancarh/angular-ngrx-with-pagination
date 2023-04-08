@@ -5,8 +5,3 @@ export interface Posts {
   body: string;
   page?: number;
 }
-
-export interface PostParams {
-  _page: number;
-  _limit: number
-}

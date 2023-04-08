@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { PostParams, Posts } from '../../models';
+import { Posts } from '../../models';
 
 export enum PostActionTypes {
   LoadPosts = '[Posts] Load Posts',

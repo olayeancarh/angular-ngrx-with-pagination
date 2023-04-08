@@ -57,7 +57,7 @@ export class PostsComponent implements OnInit, OnDestroy {
       .select(getPostsByPage(this.currentPage + 1))
       .pipe(
         tap((posts) => posts.length > 0 && (this.dataSource.data = posts)),
-        delay(1000),
+        delay(500),
         takeUntil(this._unsubscribeAll)
       )
       .subscribe(() => {
